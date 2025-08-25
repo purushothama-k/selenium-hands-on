@@ -8,6 +8,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import selenium.pageobjects.CartPage;
+import selenium.pageobjects.CheckoutPage;
+import selenium.pageobjects.ConfirmationPage;
 import selenium.pageobjects.LandingPage;
 import selenium.pageobjects.ProductCatalog;
 
@@ -35,6 +39,22 @@ public class StandAloneTest {
     System.out.println("Product found: " + (product != null));
 
     productCatalog.addProductToCart(productName);
-    productCatalog.goToCart();
+    productCatalog.goToCartPage();
+
+    CartPage cartPage = new CartPage(driver);
+    Boolean match = cartPage.verifyProductDisplay(productName);
+    Assert.assertTrue(match, "Product not found in cart: " + productName);
+    cartPage.goToCheckout();
+
+    CheckoutPage checkoutPage = new CheckoutPage(driver);
+    checkoutPage.selectCountry();
+    checkoutPage.submitOrder();
+
+    ConfirmationPage confirmationPage = new ConfirmationPage(driver);
+    String confirmMessage = confirmationPage.getConfirmationMessage();
+    Assert.assertTrue(
+      confirmMessage.equalsIgnoreCase("THANKYOU FOR THE ORDER."),
+      "Order not placed successfully"
+    );
   }
 }
