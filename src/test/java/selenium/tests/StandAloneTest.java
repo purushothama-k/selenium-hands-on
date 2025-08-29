@@ -1,4 +1,4 @@
-package selenium;
+package selenium.tests;
 
 import java.time.Duration;
 import java.util.List;
