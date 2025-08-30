@@ -32,9 +32,11 @@ public class LandingPage extends AbstractComponent {
     driver.get(URL);
   }
 
-  public void login(String email, String password) {
+  public ProductCatalog login(String email, String password) {
     userEmail.sendKeys(email);
     userPassword.sendKeys(password);
     loginButton.click();
+
+    return new ProductCatalog(driver);
   }
 }

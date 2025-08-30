@@ -30,7 +30,8 @@ public class CartPage extends AbstractComponent {
     return isProductDisplayed;
   }
 
-  public void goToCheckout() {
+  public CheckoutPage goToCheckout() {
     checkoutButton.click();
+    return new CheckoutPage(driver);
   }
 }

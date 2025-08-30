@@ -8,6 +8,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import selenium.pageobjects.CartPage;
 
 public class AbstractComponent {
 
@@ -33,7 +34,8 @@ public class AbstractComponent {
     // wait.until(ExpectedConditions.invisibilityOf(element));
   }
 
-  public void goToCartPage() {
+  public CartPage goToCartPage() {
     cartHeader.click();
+    return new CartPage(driver);
   }
 }

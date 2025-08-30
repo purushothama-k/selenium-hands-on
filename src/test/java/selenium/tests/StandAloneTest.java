@@ -9,48 +9,45 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+import org.testng.annotations.Test;
 import selenium.pageobjects.CartPage;
 import selenium.pageobjects.CheckoutPage;
 import selenium.pageobjects.ConfirmationPage;
 import selenium.pageobjects.LandingPage;
 import selenium.pageobjects.ProductCatalog;
+import selenium.testComponents.BaseTest;
 
-public class StandAloneTest {
+public class StandAloneTest extends BaseTest {
 
-  public static void main(String[] args) throws InterruptedException {
+  @Test
+  public void submitOrder() throws InterruptedException {
     String productName = "ZARA COAT 3";
-    WebDriver driver = new ChromeDriver();
-    driver.manage().window().maximize();
 
-    driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(9));
-
-    // Landing Page
-    LandingPage landingPage = new LandingPage(driver);
-    landingPage.goTo();
+    LandingPage landingPage = launchApplication();
     System.out.println("Navigated to: " + landingPage.URL);
-    landingPage.login("tedex65272@luxpolar.com", "Password12345$");
+    ProductCatalog productCatalog = landingPage.login(
+      "tedex65272@luxpolar.com",
+      "Password12345$"
+    );
 
     // Product Catalog
-    ProductCatalog productCatalog = new ProductCatalog(driver);
     List<WebElement> products = productCatalog.getProductsList();
     System.out.println("Total products found: " + products.size());
     System.out.println("Searching for product: " + productName);
+
     WebElement product = productCatalog.getProductByName(productName);
     System.out.println("Product found: " + (product != null));
 
     productCatalog.addProductToCart(productName);
-    productCatalog.goToCartPage();
 
-    CartPage cartPage = new CartPage(driver);
+    CartPage cartPage = productCatalog.goToCartPage();
     Boolean match = cartPage.verifyProductDisplay(productName);
     Assert.assertTrue(match, "Product not found in cart: " + productName);
-    cartPage.goToCheckout();
 
-    CheckoutPage checkoutPage = new CheckoutPage(driver);
+    CheckoutPage checkoutPage = cartPage.goToCheckout();
     checkoutPage.selectCountry();
-    checkoutPage.submitOrder();
 
-    ConfirmationPage confirmationPage = new ConfirmationPage(driver);
+    ConfirmationPage confirmationPage = checkoutPage.submitOrder();
     String confirmMessage = confirmationPage.getConfirmationMessage();
     Assert.assertTrue(
       confirmMessage.equalsIgnoreCase("THANKYOU FOR THE ORDER."),

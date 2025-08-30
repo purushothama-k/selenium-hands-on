@@ -68,7 +68,8 @@ public class ProductCatalog extends AbstractComponent {
     System.out.println("Toast message visible: " + isToastVisible);
   }
 
-  public void goToCart() {
+  public CartPage goToCart() {
     driver.findElement(By.cssSelector("[routerlink*='cart']")).click();
+    return new CartPage(driver);
   }
 }
